@@ -11,7 +11,7 @@ using Microsoft.Practices.ServiceLocation;
 using Prism.Logging;
 using Prism.Modularity;
 using System.Composition.Hosting;
-using Prism.Mef2.Wpf;
+using Prism.SysComposition;
 
 namespace Prism.SysComposition.Modularity
 {
@@ -37,9 +37,9 @@ namespace Prism.SysComposition.Modularity
 #pragma warning disable 0649
 
         /// <summary>
-        /// Import the available modules from the MEF container
+        /// Import the available modules from the MEF2 container
         /// </summary>
-        [ImportMany(AllowRecomposition = true)]
+        [ImportMany]
         private IEnumerable<Lazy<IModule, IModuleExport>> ImportedModules { get; set; }
 #pragma warning restore 0649
 
@@ -87,33 +87,64 @@ namespace Prism.SysComposition.Modularity
         /// <returns>
         /// A new instance of the module specified by <paramref name="moduleInfo"/>.
         /// </returns>
-        protected override IModule CreateModule(ModuleInfo moduleInfo)
-        {
-            // If there is a catalog that needs to be integrated with the AggregateCatalog as part of initialization, I add it to the container's catalog.
-            //ComposablePartCatalog partCatalog;
-            //if (this.downloadedPartCatalogs.TryGet(moduleInfo, out partCatalog))
-            //{
-            //    if (!this.aggregateCatalog.Catalogs.Contains(partCatalog))
-            //    {
-            //        this.aggregateCatalog.Catalogs.Add(partCatalog);
-            //    }
+        //protected override IModule CreateModule(ModuleInfo moduleInfo)
+        //{
+        //                                                // If there is a catalog that needs to be integrated with the AggregateCatalog as part of initialization, I add it to the container's catalog.
+        //                                                //ComposablePartCatalog partCatalog;
+        //                                                //if (this.downloadedPartCatalogs.TryGet(moduleInfo, out partCatalog))
+        //                                                //{
+        //                                                //    if (!this.aggregateCatalog.Catalogs.Contains(partCatalog))
+        //                                                //    {
+        //                                                //        this.aggregateCatalog.Catalogs.Add(partCatalog);
+        //                                                //    }
 
-            //    this.downloadedPartCatalogs.Remove(moduleInfo);
-            //}
+        //                                                //    this.downloadedPartCatalogs.Remove(moduleInfo);
+        //                                                //}
 
-            if (this.ImportedModules != null && this.ImportedModules.Count() != 0)
-            {
-                Lazy<IModule, IModuleExport> lazyModule =
-                    this.ImportedModules.FirstOrDefault(x => (x.Metadata.ModuleName == moduleInfo.ModuleName));
-                if (lazyModule != null)
-                {
-                    return lazyModule.Value;
-                }
-            }
+        //                                                //if (this.ImportedModules != null && this.ImportedModules.Count() != 0)
+        //                                                //{
+        //                                                //    Lazy<IModule, IModuleExport> lazyModule =
+        //                                                //        this.ImportedModules.FirstOrDefault(x => (x.Metadata.ModuleName == moduleInfo.ModuleName));
+        //                                                //    if (lazyModule != null)
+        //                                                //    {
+        //                                                //        return lazyModule.Value;
+        //                                                //    }
+        //                                                //}
 
-            // This does not fall back to the base implementation because the type must be in the MEF container and not just in the application domain.
-            throw new ModuleInitializeException(
-                string.Format(CultureInfo.CurrentCulture, Properties.Resources.FailedToGetType, moduleInfo.ModuleType));
-        }
+        //                                                //UfpBootstrapModule
+
+
+        //    try
+        //    {
+        //        Type ModuleType = Type.GetType(moduleInfo.ModuleType);
+        //        if (ModuleType == null) { throw new Exception("Module type not available for that module"); }
+
+        //        ModuleExportAttribute AttributeObj = ModuleType.GetCustomAttributes(typeof(ModuleExportAttribute), inherit: false).FirstOrDefault() as ModuleExportAttribute;
+        //        if (AttributeObj == null) { throw new Exception("ModuleExportAttribute not available for that module"); }
+
+
+
+        //        IEnumerable<IModule> Modules = _compositionHost.GetExports<IModule>();
+        //        foreach (IModule LoopModule in Modules)
+        //        {
+        //            bool isModuleTypeInstance = ModuleType.IsInstanceOfType(LoopModule);
+        //            bool isAttributeTypeInstance = AttributeObj.ModuleType.IsInstanceOfType(LoopModule);
+        //            if (isModuleTypeInstance && isAttributeTypeInstance) { return LoopModule; }
+
+        //        }
+
+        //        // Not found
+        //        throw new Exception("The module was not found");
+        //    }
+        //    catch (Exception Ex)
+        //    {
+
+        //        // This does not fall back to the base implementation because the type must be in the MEF container and not just in the application domain.
+        //        throw new ModuleInitializeException(
+        //            string.Format(CultureInfo.CurrentCulture, Properties.Resources.FailedToGetType, moduleInfo.ModuleType), Ex);
+        //    }
+
+ 
+        //}
     }
 }
