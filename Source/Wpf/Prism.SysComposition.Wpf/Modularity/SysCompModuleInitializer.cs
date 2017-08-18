@@ -57,9 +57,9 @@ namespace Prism.SysComposition.Modularity
             //CompositionHost fromServiceLocator = ((Mef2ServiceLocator)serviceLocator).;
 
             CompositionHost fromServiceLocator = null;
-            if(((Mef2ServiceLocator)serviceLocator) != null)
+            if(((SysCompServiceLocator)serviceLocator) != null)
             {
-                fromServiceLocator = Mef2ServiceLocator.Host;
+                fromServiceLocator = SysCompServiceLocator.Host;
 
             }
 

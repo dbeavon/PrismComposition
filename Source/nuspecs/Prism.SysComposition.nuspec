@@ -2,13 +2,13 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Prism.SysComposition</id>
-    <version>0.1.1</version>
+    <version>0.1.3</version>
     <title>System.Composition for Prism 6</title>
     <authors>David Beavon</authors>
     <owners>David Beavon</owners>
     <licenseUrl>https://github.com/dbeavon/PrismComposition/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/dbeavon/PrismComposition</projectUrl>
-    <iconUrl>http://prismlibrary.github.io/images/prism-logo-graphic-128.png</iconUrl>
+    <iconUrl>https://github.com/dbeavon/PrismComposition/blob/master/Images/Container.png?raw=true</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Use these extensions to build Prism applications based on MEF.</description>
     <summary>System.Composition extensions for Prism.</summary>
@@ -22,6 +22,7 @@
       </group>
     </dependencies>
   </metadata>
+
   <files>
     <file src="..\Wpf\Prism.SysComposition.Wpf\bin\Release\Prism.SysComposition.Wpf.*" target="lib\net46\" exclude="**\*.pdb" />
   </files>

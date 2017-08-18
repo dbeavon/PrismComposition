@@ -21,7 +21,7 @@ using Prism.SysComposition.Utility;
 
 namespace Prism.SysComposition
 {
-    public abstract class Mef2Bootstrapper : Bootstrapper
+    public abstract class SysCompBootstrapper : Bootstrapper
     {
         [Export]
         public CompositionHost Container { get; set; }
@@ -35,7 +35,7 @@ namespace Prism.SysComposition
 
         protected ConventionBuilder Builder { set; get; }
 
-        protected Mef2Bootstrapper()
+        protected SysCompBootstrapper()
         {
             ContainerConfig = new ContainerConfiguration();
             ConfigureConventions();
@@ -45,7 +45,7 @@ namespace Prism.SysComposition
                 //typeof(EmptyLogger),
                 //typeof(Prism.SysComposition.Modularity.DebugDkb.ModuleCatalog),
 
-                typeof(Mef2ServiceLocator),
+                typeof(SysCompServiceLocator),
                 typeof(RegionAdapterMappings),
 
                 typeof(SelectorRegionAdapter),
@@ -93,7 +93,7 @@ namespace Prism.SysComposition
 
             //Builder.ForType<Prism.SysComposition.Modularity.DebugDkb.ModuleCatalog>().ExportInterfaces().Shared();
 
-            Builder.ForType<Mef2ServiceLocator>().ExportInterfaces().Shared();
+            Builder.ForType<SysCompServiceLocator>().ExportInterfaces().Shared();
             Builder.ForType<RegionAdapterMappings>().Export().Shared();
 
             Builder.ForType<SelectorRegionAdapter>().Export().ExportInterfaces().Shared();
@@ -217,7 +217,7 @@ namespace Prism.SysComposition
 
             this.Container = ContainerConfig.CreateContainer();
 
-            Mef2ServiceLocator.Host = Container;
+            SysCompServiceLocator.Host = Container;
 
             this.ConfigureServiceLocator();
 
@@ -327,3 +327,5 @@ namespace Prism.SysComposition
         }
     }
 }
+
+// here

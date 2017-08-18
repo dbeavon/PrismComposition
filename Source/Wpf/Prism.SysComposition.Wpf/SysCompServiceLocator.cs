@@ -5,7 +5,7 @@ using Microsoft.Practices.ServiceLocation;
 
 namespace Prism.SysComposition
 {
-    public class Mef2ServiceLocator : ServiceLocatorImplBase
+    public class SysCompServiceLocator : ServiceLocatorImplBase
     {
         public static CompositionHost Host;
 
@@ -20,3 +20,6 @@ namespace Prism.SysComposition
         }
     }
 }
+
+
+
