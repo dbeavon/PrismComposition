@@ -1,24 +1,24 @@
-
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel.Composition;
 using System.Linq;
+using System.Composition;
+
 using Prism.Logging;
 using Prism.Modularity;
 
-namespace Prism.SysComposition.Modularity
+namespace Prism.SysComposition.Modularity 
 {
     /// <summary>    
     /// Component responsible for coordinating the modules' type loading and module initialization process. 
     /// </summary>
     /// <remarks>
-    /// This allows the MefBootstrapper to provide this class as a default implementation.
+    /// This allows the SysCompBootstrapper to provide this class as a default implementation.
     /// If another implementation is found, this export will not be used.
     /// </remarks>
+    [Shared]
     [Export(typeof(IModuleManager))]
-    public partial class SysCompModuleManager : ModuleManager, IPartImportsSatisfiedNotification
+    public partial class SysCompModuleManager : ModuleManager  
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SysCompModuleManager"/> class.
@@ -30,34 +30,33 @@ namespace Prism.SysComposition.Modularity
         public SysCompModuleManager(
             IModuleInitializer moduleInitializer,
             IModuleCatalog moduleCatalog,
-            ILoggerFacade loggerFacade,
-            SysCompFileModuleTypeLoader mefFileModuleTypeLoader)
-
+            ILoggerFacade loggerFacade)
             : base(moduleInitializer, moduleCatalog, loggerFacade)
         {
-            _mefFileModuleTypeLoader = mefFileModuleTypeLoader;
         }
 
         /// <summary>
         /// Gets or sets the modules to be imported.
         /// </summary>
         /// <remarks>Import the available modules from the MEF container</remarks>
-        [ImportMany(AllowRecomposition = true)]
-        protected IEnumerable<Lazy<IModule, IModuleExport>> ImportedModules { get; set; }
+        [ImportMany]
+        public IEnumerable<Lazy<IModule, ModuleExportAttribute>> ImportedModules { get; set; }
 
         /// <summary>
         /// Called when a part's imports have been satisfied and it is safe to use.
+        /// The original MEF1 called this via interface: System.ComponentModel.Composition.IPartImportsSatisfiedNotification
         /// </summary>
         /// <remarks>
         /// Whenever the MEF container loads new types that cause ImportedModules to be recomposed, this is called.
         /// This method ensures that as the MEF container discovered new modules, the ModuleCatalog is updated.
         /// </remarks>
-        public virtual void OnImportsSatisfied()
+        [OnImportsSatisfied]
+        public void OnImportsSatisfied()
         {
             // To prevent a double foreach loop, we key on the module type for anything already in the catalog.
             IDictionary<string, ModuleInfo> registeredModules = this.ModuleCatalog.Modules.ToDictionary(m => m.ModuleName);
 
-            foreach (Lazy<IModule, IModuleExport> lazyModule in this.ImportedModules)
+            foreach (Lazy<IModule, ModuleExportAttribute> lazyModule in this.ImportedModules)
             {
                 // It is important that the Metadata.ModuleType is used here. 
                 // Using GetType().Name would cause the Module to be constructed here rather than lazily when the module is needed.
@@ -92,6 +91,7 @@ namespace Prism.SysComposition.Modularity
             this.LoadModulesThatAreReadyForLoad();
         }
 
+                                                        
         /// <summary>
         /// Checks if the module needs to be retrieved before it's initialized.
         /// </summary>

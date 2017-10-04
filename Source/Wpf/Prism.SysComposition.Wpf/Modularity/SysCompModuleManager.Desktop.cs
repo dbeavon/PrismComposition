@@ -1,7 +1,5 @@
-
-
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Composition;
 using Prism.Modularity;
 
 namespace Prism.SysComposition.Modularity
@@ -10,19 +8,23 @@ namespace Prism.SysComposition.Modularity
     /// Component responsible for coordinating the modules' type loading and module initialization process. 
     /// </summary>
     /// <remarks>
-    /// This allows the MefBootstrapper to provide this class as a default implementation.
+    /// This allows the SysCompBootstrapper to provide this class as a default implementation.
     /// If another implementation is found, this export will not be used.
     /// </remarks>
-    public partial class SysCompModuleManager : ModuleManager, IPartImportsSatisfiedNotification
+    public partial class SysCompModuleManager : ModuleManager 
     {
+
+
         // disable the warning that the field is never assigned to, and will always have its default value null
         // as it is imported by MEF
 #pragma warning disable 0649
-        // [Import]  NOT WORKING AS IMPORT
-        public SysCompFileModuleTypeLoader _mefFileModuleTypeLoader ;
+        [Import()] 
+        public SysCompFileModuleTypeLoader MefFileModuleTypeLoader { get; set; }
 #pragma warning restore 0649
 
-        //private IEnumerable<IModuleTypeLoader> mefTypeLoaders;
+
+
+        private IEnumerable<IModuleTypeLoader> _mefTypeLoaders;
 
         /// <summary>
         /// Gets or sets the type loaders used by the module manager.
@@ -31,19 +33,21 @@ namespace Prism.SysComposition.Modularity
         {
             get
             {
-                return new List<IModuleTypeLoader>()
+                if (this._mefTypeLoaders == null)
+                {
+                    this._mefTypeLoaders = new List<IModuleTypeLoader>()
                                               {
-                                                  this._mefFileModuleTypeLoader
+                                                  this.MefFileModuleTypeLoader
                                               };
-                //}
+                }
 
-                //return this.mefTypeLoaders;
+                return this._mefTypeLoaders;
             }
 
-            //set
-            //{
-            //    this.mefTypeLoaders = value;
-            //}
+            set
+            {
+                this._mefTypeLoaders = value;
+            }
         }
     }
 }
