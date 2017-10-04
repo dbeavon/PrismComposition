@@ -1,59 +1,81 @@
-
-
 using System;
-using System.ComponentModel;
-using System.ComponentModel.Composition;
+
+
+using System.Collections.Generic;
+using System.Composition;
+using System.Composition.Hosting;
+
 using Prism.Modularity;
+
 
 namespace Prism.SysComposition.Modularity
 {
     /// <summary>
     /// An attribute that is applied to describe the Managed Extensibility Framework export of an IModule.
     /// </summary>    
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1813:AvoidUnsealedAttributes", Justification = "Allowing users of the framework to extend the functionality")]
     [MetadataAttribute]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
     public class ModuleExportAttribute : ExportAttribute, IModuleExport
     {
+
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModuleExportAttribute"/> class.
+        /// Module export for System.Composition metadata views.
         /// </summary>
-        /// <param name="moduleType">The concrete type of the module being exported. Not typeof(IModule).</param>
-        public ModuleExportAttribute(Type moduleType)
-            : base(typeof(IModule))
+        public ModuleExportAttribute(IDictionary<string, object> metadata) : base(typeof(IModule))
         {
-            if (moduleType == null)
+            if(!metadata.ContainsKey("ModuleType"))
             {
-                throw new ArgumentNullException(nameof(moduleType));
+                throw new ArgumentNullException(nameof(metadata));
             }
 
-            this.ModuleName = moduleType.Name;
+            if(!(metadata["ModuleType"] is Type))
+            {
+                throw new ArgumentNullException(nameof(metadata));
+            }
+
+            if (!metadata.ContainsKey("ModuleName"))
+            {
+                throw new ArgumentNullException(nameof(metadata));
+            }
+
+            if (!(metadata["ModuleName"] is string))
+            {
+                throw new ArgumentNullException(nameof(metadata));
+            }
+
+            // Initialize the module export attribute
+            Type moduleType = (Type)metadata["ModuleType"];
+            this.ModuleName = metadata["ModuleName"].ToString();
             this.ModuleType = moduleType;
+            this.InitializationMode = InitializationMode.WhenAvailable;
+
+            // Get the initialization mode if available.
+            if (metadata.ContainsKey("InitializationMode"))
+            {
+                this.InitializationMode = (InitializationMode)metadata["InitializationMode"];
+            }
+
+
+
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModuleExportAttribute"/> class.
+        /// Module export for System.Composition metadata views.
         /// </summary>
-        /// <param name="moduleName">The contract name of the module.</param>
-        /// <param name="moduleType">The concrete type of the module being exported. Not typeof(IModule).</param>
-        public ModuleExportAttribute(string moduleName, Type moduleType)
-            : base(typeof(IModule))
-        {
-            this.ModuleName = moduleName;
-            this.ModuleType = moduleType;
-        }
-
-        #region IModuleExport Members
+        public ModuleExportAttribute() : base(typeof(IModule)) { }
+         
+          
 
         /// <summary>
         /// Gets the contract name of the module.
         /// </summary>
-        public string ModuleName { get; private set; }
+        public string ModuleName { get;  set; }
 
         /// <summary>
         /// Gets concrete type of the module being exported. Not typeof(IModule).
         /// </summary>
-        public Type ModuleType { get; private set; }
+        public Type ModuleType { get;  set; }
 
         /// <summary>
         /// Gets or sets when the module should have Initialize() called.
@@ -64,9 +86,9 @@ namespace Prism.SysComposition.Modularity
         /// Gets or sets the contract names of modules this module depends upon.
         /// </summary>
         [CLSCompliant(false)] // Arrays as attribute arguments is not CLS-compliant.
-        [DefaultValue(new string[0])]
+        [System.ComponentModel.DefaultValue(new string[0])]
         public string[] DependsOnModuleNames { get; set; }
 
-        #endregion
     }
 }
+

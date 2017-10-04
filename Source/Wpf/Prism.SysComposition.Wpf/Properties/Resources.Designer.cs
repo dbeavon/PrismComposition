@@ -19,7 +19,7 @@ namespace Prism.SysComposition.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -133,11 +133,38 @@ namespace Prism.SysComposition.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Container configuration was adjusted..
+        /// </summary>
+        internal static string ContainerConfigurationWasAdjusted {
+            get {
+                return ResourceManager.GetString("ContainerConfigurationWasAdjusted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Creating catalog for MEF.
         /// </summary>
         internal static string CreatingCatalogForMEF {
             get {
                 return ResourceManager.GetString("CreatingCatalogForMEF", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating container configuration.
+        /// </summary>
+        internal static string CreatingConfigurationForSysComp {
+            get {
+                return ResourceManager.GetString("CreatingConfigurationForSysComp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Creating SysComposition container.
+        /// </summary>
+        internal static string CreatingContainerForSysComp {
+            get {
+                return ResourceManager.GetString("CreatingContainerForSysComp", resourceCulture);
             }
         }
         

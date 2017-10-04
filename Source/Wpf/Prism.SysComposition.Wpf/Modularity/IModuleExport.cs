@@ -1,7 +1,4 @@
-
-
 using System;
-using System.ComponentModel;
 using Prism.Modularity;
 
 namespace Prism.SysComposition.Modularity
@@ -10,6 +7,7 @@ namespace Prism.SysComposition.Modularity
     /// Describe the Managed Extensibility Framework export of an IModule.
     /// </summary>
     /// <remarks>
+    /// Remarks:
     /// This interface is used when importing classes exported with the ModuleExportAttribute.
     /// This interface and the ModuleExport class properties should match.
     /// </remarks>
@@ -31,7 +29,7 @@ namespace Prism.SysComposition.Modularity
         /// Gets when the module should have Initialize() called.
         /// </summary>
         /// <value>The initialization mode.</value>
-        [DefaultValue(InitializationMode.WhenAvailable)]
+        [System.ComponentModel.DefaultValue(InitializationMode.WhenAvailable)]
         InitializationMode InitializationMode { get; }
 
         /// <summary>
@@ -39,7 +37,7 @@ namespace Prism.SysComposition.Modularity
         /// </summary>
         /// <value>An array of module names.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [DefaultValue(null)]
+        [System.ComponentModel.DefaultValue(null)]
         string[] DependsOnModuleNames { get; }
     }
 }

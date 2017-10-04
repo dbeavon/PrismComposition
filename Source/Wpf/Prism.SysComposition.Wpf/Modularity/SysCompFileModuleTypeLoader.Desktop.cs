@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 using System.IO;
+using System.Composition;
+
 using Prism.Modularity;
+
 
 namespace Prism.SysComposition.Modularity
 {
@@ -12,19 +13,15 @@ namespace Prism.SysComposition.Modularity
     /// <see cref="ModuleInfo"/> classes have a Ref parameter that starts with "file://".
     /// This class is only used on the Desktop version of the Prism Library when used with Managed Extensibility Framework.
     /// </summary>
-    [Export]
+    [Shared]
+    [Export(typeof(SysCompFileModuleTypeLoader))]
+    [Export(typeof(IModuleTypeLoader))]
     public class SysCompFileModuleTypeLoader : IModuleTypeLoader
     {
         private const string RefFilePrefix = "file://";
         private readonly HashSet<Uri> downloadedUris = new HashSet<Uri>();
 
-                                            //        // disable the warning that the field is never assigned to, and will always have its default value null
-                                            //        // as it is imported by MEF
-                                            //#pragma warning disable 0649
-                                            //        [Import(AllowRecomposition = false)]
-                                            //        private AggregateCatalog aggregateCatalog;
-                                            //#pragma warning restore 0649
-
+    
         /// <summary>
         /// Initializes a new instance of the SysCompFileModuleTypeLoader class.
         /// This instance is used to load requested module types.
@@ -33,7 +30,6 @@ namespace Prism.SysComposition.Modularity
         {
         }
 
-        #region IModuleTypeLoader Members
 
         /// <summary>
         /// Raised repeatedly to provide progress as modules are loaded in the background.
@@ -82,7 +78,16 @@ namespace Prism.SysComposition.Modularity
                 }
                 else
                 {
-                    string path = uri.LocalPath;
+                    string path;
+
+                    if (moduleInfo.Ref.StartsWith(RefFilePrefix + "/", StringComparison.Ordinal))
+                    {
+                        path = moduleInfo.Ref.Substring(RefFilePrefix.Length + 1);
+                    }
+                    else
+                    {
+                        path = moduleInfo.Ref.Substring(RefFilePrefix.Length);
+                    }
 
                     long fileSize = -1L;
                     if (File.Exists(path))
@@ -94,11 +99,8 @@ namespace Prism.SysComposition.Modularity
                     // Although this isn't asynchronous, nor expected to take very long, I raise progress changed for consistency.
                     this.RaiseModuleDownloadProgressChanged(moduleInfo, 0, fileSize);
 
-
-                    // A BIT WIERD.  DON"T MESS WITH MY CATALOG.  SLOW!
-                    //this.aggregateCatalog.Catalogs.Add(new AssemblyCatalog(path));
-
-
+                            // DISABLE - MEF2 needs another mechanism to introduce itms into CompositionHost container
+                            //this.aggregateCatalog.Catalogs.Add(new System.ComponentModel.Composition.Hosting.AssemblyCatalog(path));
 
                     // Although this isn't asynchronous, nor expected to take very long, I raise progress changed for consistency.
                     this.RaiseModuleDownloadProgressChanged(moduleInfo, fileSize, fileSize);
@@ -115,7 +117,6 @@ namespace Prism.SysComposition.Modularity
             }
         }
 
-        #endregion
 
         private void RaiseModuleDownloadProgressChanged(
             ModuleInfo moduleInfo,
